@@ -53,7 +53,7 @@ const validationSchema = Yup.object().shape({
   Native: Yup.string().required("Required"),
   TextField: Yup.string().required(),
   Select: Yup.string().required(),
-  Checkbox: Yup.boolean().required()
+  Checkbox: Yup.boolean().oneOf([true], 'Please select MUI Checkbox')
 })
 
 function App() {
@@ -87,7 +87,7 @@ function App() {
                 />
               )}
             />
-
+            <ErrorMessage name="Checkbox" errors={errors} />
           </section>
 
           <section>
