@@ -3,11 +3,12 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Controller } from "react-hook-form";
 
-export default function CountrySelect({ onChange, control }) {
+export default function CountrySelect({ control }) {
   return (
     <Controller
-      as={
+      render={props => (
         <Autocomplete
+          {...props}
           options={countries}
           getOptionLabel={option => option.label}
           renderOption={option => (
@@ -23,12 +24,11 @@ export default function CountrySelect({ onChange, control }) {
               variant="outlined"
             />
           )}
+          onChange={(_, data) => props.onChange(data)}
         />
-      }
-      onChange={([, data]) => data}
+      )}
       name="country"
       control={control}
-      defaultValue={{ code: "AF", label: "Afghanistan", phone: "93" }}
     />
   );
 }

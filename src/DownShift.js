@@ -5,8 +5,8 @@ const items = ["apple", "pear", "orange", "grape", "banana"];
 
 export default ({ value, onChange }) => (
   <Downshift
-    initialInputValue={value}
-    onChange={onChange}
+    onStateChange={e => onChange(e.inputValue || "")}
+    inputValue={value}
     itemToString={item => (item ? item : "")}
   >
     {({

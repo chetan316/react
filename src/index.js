@@ -1,41 +1,24 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import Header from "./Header";
 import ReactDatePicker from "react-datepicker";
 import NumberFormat from "react-number-format";
 import ReactSelect from "react-select";
-import options from "./constants/reactSelectOptions";
-import {
-  TextField,
-  Checkbox,
-  Select,
-  MenuItem,
-  Switch,
-  RadioGroup,
-  FormControlLabel,
-  ThemeProvider,
-  Radio,
-  createMuiTheme,
-  Slider
-} from "@material-ui/core";
-import MuiAutoComplete from "./MuiAutoComplete";
+import Mui from "./Mui";
+import ButtonsResult from "./ButtonsResult";
+import DownShift from "./DownShift";
+import AntD from "./AntD";
+import DraftExample from "./DraftExample";
+import { EditorState } from "draft-js";
 import "react-datepicker/dist/react-datepicker.css";
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers';
-import { ErrorMessage } from '@hookform/error-message';
+import "antd/dist/antd.css";
 
 import "./styles.css";
-import ButtonsResult from "./ButtonsResult";
-import DonwShift from "./DonwShift";
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers';
 
 let renderCount = 0;
-
-const theme = createMuiTheme({
-  palette: {
-    type: "dark"
-  }
-});
 
 const defaultValues = {
   Native: "",
@@ -46,163 +29,123 @@ const defaultValues = {
   switch: false,
   RadioGroup: "",
   numberFormat: 123456789,
-  downShift: "apple"
+  AntdInput: "Test",
+  AntdCheckbox: true,
+  AntdSwitch: true,
+  AntdSlider: 20,
+  AntdRadio: 1,
+  downShift: "apple",
+  DraftJS: EditorState.createEmpty(),
+  MUIPicker: new Date("2014-08-18T21:11:54"),
+  country: { code: "AF", label: "Afghanistan", phone: "93" },
+  password: "",
+  confirmPassword: ""
 };
 
 const validationSchema = Yup.object().shape({
-  Native: Yup.string().required("Required"),
-  TextField: Yup.string().required(),
-  Select: Yup.string().required(),
-  Checkbox: Yup.boolean().oneOf([true], 'Please select MUI Checkbox')
+  // TextField: Yup.string()
+  //   .required('Please enter TextField value')
+  //   .min(2, 'Textfield atleast 2 character long'),
+  // Select: Yup.string().required('Please select'),
+  // RadioGroup: Yup.string().required('Please select Gender'),
+  // // Checkbox: Yup.boolean().oneOf([true], 'Please check MUI Checkbox'),
+  // Checkbox: Yup.bool()
+  //   .test(
+  //     'Checkbox',
+  //     'You have to agree with our Terms and Conditions!',
+  //     value => value === true
+  //   )
+  password: Yup.string()
+    .required('Please enter password')
+    .min(2, 'Password has to be longer than 2 characters!'),
+  confirmPassword: Yup.string()
+    .required('Password confirmation is required!')
+  // .oneOf([Yup.ref['password'], null], 'Passwords are not the same!')
+  //.test('password', 'Matchss', value => value === watch('password'))
 })
 
+
 function App() {
-  const { handleSubmit, register, reset, control, errors } = useForm({
+  const { handleSubmit, reset, control, errors, watch, trigger, formState } = useForm({
+    mode: "all",
     defaultValues,
     resolver: yupResolver(validationSchema)
   });
+  const { isDirty, isSubmitting, touched, submitCount } = formState;
   const [data, setData] = useState(null);
   renderCount++;
 
+  const onSubmit = (data) => {
+    setData(data)
+  }
+
   return (
-    <ThemeProvider theme={theme}>
-      <form onSubmit={handleSubmit(data => setData(data))} className="form">
-        <Header renderCount={renderCount} />
-        <div className="container">
-          <section>
-            <label>Native Input:</label>
-            <input name="Native" className="input" ref={register} />
-            <ErrorMessage name="Native" errors={errors} />
-          </section>
+    <form onSubmit={handleSubmit(onSubmit)} className="form" error={errors}>
+      <Header renderCount={renderCount} />
 
-          <section>
-            <label>MUI Checkbox</label>
-            <Controller
-              name="Checkbox"
-              control={control}
-              render={props => (
-                <Checkbox
-                  onChange={e => props.onChange(e.target.checked)}
-                  checked={props.value}
-                />
-              )}
-            />
-            <ErrorMessage name="Checkbox" errors={errors} />
-          </section>
+      <Mui control={control} errors={errors} touched={touched} />
 
-          <section>
-            <label>Radio Group</label>
-            <Controller
-              as={
-                <RadioGroup aria-label="gender">
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                </RadioGroup>
-              }
-              name="RadioGroup"
-              control={control}
-            />
-          </section>
+      <hr />
 
-          <section>
-            <label>MUI TextField</label>
-            <Controller as={TextField} name="TextField" control={control} />
-            <ErrorMessage name="TextField" errors={errors} />
-          </section>
+      {/* <AntD control={control} /> */}
 
-          <section>
-            <label>MUI Select</label>
-            <Controller
-              as={
-                <Select>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              }
-              name="Select"
-              control={control}
-            />
-            <ErrorMessage name="Select" errors={errors} />
-          </section>
+      <hr />
 
-          <section>
-            <label>MUI Switch</label>
-            <Controller
-              as={Switch}
-              type="checkbox"
-              name="switch"
-              control={control}
-            />
-          </section>
+      <div className="container">
+        <section>
+          <label>React Select</label>
+          <Controller
+            as={ReactSelect}
+            options={[
+              { value: "chocolate", label: "Chocolate" },
+              { value: "strawberry", label: "Strawberry" },
+              { value: "vanilla", label: "Vanilla" }
+            ]}
+            name="ReactSelect"
+            isClearable
+            control={control}
+          />
+        </section>
 
-          <section>
-            <label>MUI Slider</label>
-            <Controller
-              name="MUI_Slider"
-              control={control}
-              defaultValue={[0, 10]}
-              onChange={([, value]) => value}
-              as={<Slider valueLabelDisplay="auto" max={10} step={1} />}
-            />
-          </section>
+        <section>
+          <label>React Datepicker</label>
+          <Controller
+            control={control}
+            name="ReactDatepicker"
+            render={props => (
+              <ReactDatePicker
+                className="input"
+                placeholderText="Select date"
+                onChange={e => props.onChange(e)}
+                selected={props.value}
+              />
+            )}
+          />
+        </section>
 
-          <section>
-            <label>MUI autocomplete</label>
-            <MuiAutoComplete control={control} />
-          </section>
+        <section>
+          <label>NumberFormat</label>
+          <Controller
+            as={NumberFormat}
+            thousandSeparator
+            name="numberFormat"
+            className="input"
+            control={control}
+          />
+        </section>
 
-          <section>
-            <label>React Select</label>
-            <Controller
-              as={ReactSelect}
-              options={options}
-              name="ReactSelect"
-              isClearable
-              control={control}
-            />
-          </section>
+        {/* <section>
+          <Controller as={DownShift} control={control} name="downShift" />
+        </section> */}
 
-          <section>
-            <label>React Datepicker</label>
-            <Controller
-              as={ReactDatePicker}
-              control={control}
-              valueName="selected" // DateSelect value's name is selected
-              onChange={([selected]) => selected}
-              name="ReactDatepicker"
-              className="input"
-              placeholderText="Select date"
-            />
-          </section>
+        <section>
+          <label>DraftJS</label>
+          <DraftExample control={control} />
+        </section>
+      </div>
 
-          <section>
-            <label>NumberFormat</label>
-            <Controller
-              as={NumberFormat}
-              thousandSeparator
-              name="numberFormat"
-              className="input"
-              control={control}
-            />
-          </section>
-
-          <section>
-            <Controller as={DonwShift} control={control} name="downShift" />
-          </section>
-        </div>
-
-        <ButtonsResult {...{ data, reset, defaultValues }} />
-      </form>
-    </ThemeProvider>
+      <ButtonsResult {...{ data, reset, defaultValues, formState, errors }} />
+    </form>
   );
 }
 
