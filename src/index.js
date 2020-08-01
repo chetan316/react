@@ -43,18 +43,18 @@ const defaultValues = {
 };
 
 const validationSchema = Yup.object().shape({
-  // TextField: Yup.string()
-  //   .required('Please enter TextField value')
-  //   .min(2, 'Textfield atleast 2 character long'),
-  // Select: Yup.string().required('Please select'),
-  // RadioGroup: Yup.string().required('Please select Gender'),
-  // // Checkbox: Yup.boolean().oneOf([true], 'Please check MUI Checkbox'),
-  // Checkbox: Yup.bool()
-  //   .test(
-  //     'Checkbox',
-  //     'You have to agree with our Terms and Conditions!',
-  //     value => value === true
-  //   )
+  TextField: Yup.string()
+    .required('Please enter TextField value')
+    .min(2, 'Textfield atleast 2 character long'),
+  Select: Yup.string().required('Please select'),
+  RadioGroup: Yup.string().required('Please select Gender'),
+  // Checkbox: Yup.boolean().oneOf([true], 'Please check MUI Checkbox'),
+  Checkbox: Yup.bool()
+    .test(
+      'Checkbox',
+      'You have to agree with our Terms and Conditions!',
+      value => value === true
+    ),
   password: Yup.string()
     .required('Please enter password')
     .min(2, 'Password has to be longer than 2 characters!'),

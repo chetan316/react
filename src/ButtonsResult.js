@@ -28,7 +28,7 @@ export default ({ data, reset, defaultValues, formState, errors }) => {
         Reset Form
       </button>
       {/* <pre style={{ textAlign: "left", color: "white" }}>{JSON.stringify(formState)}</pre> */}
-      <pre style={{ textAlign: "left", color: "white" }}>{JSON.stringify(errors)}</pre>
+      {/* <pre style={{ textAlign: "left", color: "white" }}>{JSON.stringify(errors)}</pre> */}
       <button className="button" >submit</button>
     </>
   );
