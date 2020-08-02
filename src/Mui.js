@@ -32,7 +32,7 @@ const theme = createMuiTheme({
   }
 });
 
-export default ({ control, errors, touched }) => (
+export default ({ control, errors, touched, getValues }) => (
   <ThemeProvider theme={theme}>
     <div className="container">
       <section>

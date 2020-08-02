@@ -43,30 +43,33 @@ const defaultValues = {
 };
 
 const validationSchema = Yup.object().shape({
-  TextField: Yup.string()
-    .required('Please enter TextField value')
-    .min(2, 'Textfield atleast 2 character long'),
-  Select: Yup.string().required('Please select'),
-  RadioGroup: Yup.string().required('Please select Gender'),
-  // Checkbox: Yup.boolean().oneOf([true], 'Please check MUI Checkbox'),
-  Checkbox: Yup.bool()
-    .test(
-      'Checkbox',
-      'You have to agree with our Terms and Conditions!',
-      value => value === true
-    ),
+  // TextField: Yup.string()
+  //   .required('Please enter TextField value')
+  //   .min(2, 'Textfield atleast 2 character long'),
+  // Select: Yup.string().required('Please select'),
+  // RadioGroup: Yup.string().required('Please select Gender'),
+  // // Checkbox: Yup.boolean().oneOf([true], 'Please check MUI Checkbox'),
+  // Checkbox: Yup.bool()
+  //   .test(
+  //     'Checkbox',
+  //     'You have to agree with our Terms and Conditions!',
+  //     value => value === true
+  //   ),
   password: Yup.string()
     .required('Please enter password')
     .min(2, 'Password has to be longer than 2 characters!'),
   confirmPassword: Yup.string()
     .required('Password confirmation is required!')
+    .test('password', 'Passwords must match', function (value) {
+      return this.parent.password === value;
+    })
   // .oneOf([Yup.ref['password'], null], 'Passwords are not the same!')
   //.test('password', 'Matchss', value => value === watch('password'))
 })
 
 
 function App() {
-  const { handleSubmit, reset, control, errors, watch, trigger, formState } = useForm({
+  const { handleSubmit, reset, control, errors, watch, trigger, formState, getValues } = useForm({
     mode: "all",
     defaultValues,
     resolver: yupResolver(validationSchema)
@@ -83,7 +86,7 @@ function App() {
     <form onSubmit={handleSubmit(onSubmit)} className="form" error={errors}>
       <Header renderCount={renderCount} />
 
-      <Mui control={control} errors={errors} touched={touched} />
+      <Mui control={control} errors={errors} touched={touched} getValues={getValues} />
 
       <hr />
 
